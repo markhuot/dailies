@@ -1,0 +1,8 @@
+<svg class="w-4 h-4" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="100" height="100" fill="white" vector-effect="non-scaling-stroke"/>
+<path d="M10.5 10.5H89.5V69.7929L69.7929 89.5H10.5V10.5Z" stroke="black" vector-effect="non-scaling-stroke"/>
+<line x1="20" y1="19.5" x2="80" y2="19.5" stroke="black" vector-effect="non-scaling-stroke"/>
+<path d="M20 44H76.5" stroke="black" vector-effect="non-scaling-stroke"/>
+<path d="M20 56H76" stroke="black" vector-effect="non-scaling-stroke"/>
+<path d="M20 32H75.5" stroke="black" vector-effect="non-scaling-stroke"/>
+</svg>
