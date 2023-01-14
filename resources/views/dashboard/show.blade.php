@@ -15,7 +15,12 @@ $tasks = request()->user()->tasks()->where('date', '>=', $from)->where('date', '
                                 </span>
                             </p>
                             <p class="font-extralight text-rose-300">
-                                <small>{{ \Carbon\CarbonInterval::seconds($tasks->get($day->format('Y-m-d'))?->map(fn ($t) => $t->timers?->duration()->total('seconds'))->sum())->cascade()->forHumans(null, true) }}</small>
+                                @php
+                                    $duration = \Carbon\CarbonInterval::seconds($tasks->get($day->format('Y-m-d'))?->map(fn ($t) => $t->timers?->duration()->total('seconds'))->sum())->cascade();
+                                @endphp
+                                @if ($duration->total('seconds') > 0)
+                                    <small>{{ $duration->forHumans(null, true) }}</small>
+                                @endif
                             </p>
                         </th>
                     @endforeach
