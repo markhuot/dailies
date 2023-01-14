@@ -61,4 +61,26 @@ class Task extends Component
         $this->task->name = $name;
         $this->task->save();
     }
+
+    public function setSort(\App\Models\Task $movingTask, string $beforeOrAfter)
+    {
+        $newDate = $this->task->date;
+        $newSort = $this->task->sort + ($beforeOrAfter === 'after' ? 1 : 0);
+
+        if ($movingTask->date->isSameDay($this->task->date)) {
+            \App\Models\Task::where('date', $this->task->date)
+                ->where('sort', '>=', $newSort)
+                ->where('sort', '<', $movingTask->sort)
+                ->increment('sort');
+        }
+        else {
+            \App\Models\Task::where('date', $this->task->date)
+                ->where('sort', '>=', $newSort)
+                ->increment('sort');
+        }
+
+        $movingTask->date = $newDate;
+        $movingTask->sort = $newSort;
+        $movingTask->save();
+    }
 }

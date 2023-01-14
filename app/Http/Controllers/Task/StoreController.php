@@ -15,6 +15,8 @@ class StoreController extends Controller
             'task.date' => [],
         ]);
 
+        $attributes['task']['sort'] = Task::where('date', $attributes['task']['date'])->count();
+
         $task = Task::create($attributes['task']);
         $request->user()->tasks()->save($task);
 

@@ -1,4 +1,54 @@
-<div class="p-4 space-y-2 rounded has-checked:opacity-30">
+@pushOnce('js')
+    <script type="module">
+        Alpine.data('task', ({id}) => ({
+            init() {
+                this.$el.ondragstart = this.onDragStart.bind(this);
+                this.$el.ondragover = this.onDragOver.bind(this);
+                this.$el.ondragend = this.onDragEnd.bind(this);
+                this.$el.ondrop = this.onDrop.bind(this);
+                this.movePlaceholderEl = document.getElementById('drag-placeholder');
+            },
+            onDragStart(event) {
+                event.dataTransfer.setData('application/dailies-task-id', id);
+                event.dataTransfer.effectAllowed = 'move';
+            },
+            onDragOver(event) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'move';
+                this.movePlaceholder(event);
+            },
+            onDrop(event) {
+                event.preventDefault();
+                const taskId = event.dataTransfer.getData('application/dailies-task-id');
+                const [isAfter] = this.isEventDraggingBelowElement(event);
+                if (taskId && id !== parseInt(taskId)) {
+                    this.$wire.setSort(taskId, isAfter ? 'after' : 'before');
+                }
+            },
+            onDragEnd() {
+                this.movePlaceholderEl.classList.add('hidden');
+            },
+            isEventDraggingBelowElement(event) {
+                const bounds = this.$el.getBoundingClientRect()
+                const boundary = bounds.top + (bounds.height / 2);
+                return [event.pageY > window.scrollY + boundary, bounds];
+            },
+            movePlaceholder(event) {
+                const [isAfter, bounds] = this.isEventDraggingBelowElement(event);
+
+                this.movePlaceholderEl.classList.remove('hidden');
+                this.movePlaceholderEl.style.top = (window.scrollY + bounds.top + (isAfter ? bounds.height : 0)) + 'px';
+                this.movePlaceholderEl.style.left = bounds.left + 'px';
+                this.movePlaceholderEl.style.width = bounds.width + 'px';
+            }
+        }));
+    </script>
+@endPushOnce
+<div class="p-4 space-y-2 rounded has-checked:opacity-30"
+     draggable="true"
+     data-draggable-data='{"id":{{ $task->id }}'
+     x-data="task({{ Js::from(['id' => $task->id]) }})"
+>
     <div class="grid grid-cols-[1.5rem_auto] items-baseline">
         <div>
             <input id="id-{{ $task->id }}-check" class="peer hidden" type="checkbox" name="task[complete]" {{ $task->complete ? 'checked' : '' }} wire:change="toggleComplete" value="1">

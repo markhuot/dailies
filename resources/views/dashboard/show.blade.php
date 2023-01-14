@@ -8,12 +8,12 @@ $tasks = request()->user()->tasks()->where('date', '>=', $from)->where('date', '
     set-dashboard-border-slate-700
     set-dashboard-dim-slate-600
     set-dashboard-highlight-slate-700
-    set-dashboard-highlight-overlay-slate-900
+    set-dashboard-highlight-overlay-pink-600
     bg-slate-800
     text-white
 
 {{--    set-dashboard-primary-rose-600--}}
-{{--    set-dashboard-primary-rose-500--}}
+{{--    set-dashboard-primary-highlight-rose-500--}}
 {{--    set-dashboard-primary-dim-rose-300--}}
 {{--    set-dashboard-border-gray-100--}}
 {{--    set-dashboard-highlight-rose-100--}}
@@ -51,7 +51,7 @@ $tasks = request()->user()->tasks()->where('date', '>=', $from)->where('date', '
                     @foreach($days as $day)
                     <td class="align-top">
                         <ul class="divide-y divide-dashboard-border">
-                            @foreach($tasks->get($day->format('Y-m-d')) ?? [] as $task)
+                            @foreach($tasks->get($day->format('Y-m-d'))?->sortBy('sort') ?? [] as $task)
                             <li>
                                 <livewire:task :task="$task" />
                             </li>
@@ -75,4 +75,5 @@ $tasks = request()->user()->tasks()->where('date', '>=', $from)->where('date', '
             <x-icon-gear class="w-8 h-8 text-white fill-current"/>
         </a>
     </div>
+    <div id="drag-placeholder" class="absolute h-2 w-full bg-dashboard-highlight-overlay hidden rounded-full shadow-lg"></div>
 </x-app>
