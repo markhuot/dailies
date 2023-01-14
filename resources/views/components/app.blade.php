@@ -7,7 +7,7 @@
     @vite('resources/css/app.css')
     @livewireStyles
 </head>
-<body class="flex w-screen h-screen">
+<body {{ $attributes->merge(['class' => 'flex w-screen h-screen']) }}>
     {{ $slot }}
     @vite('resources/js/app.js')
     @stack('js')
