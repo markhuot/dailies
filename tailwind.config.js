@@ -10,7 +10,13 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                //'dashboard-primary': 'var(--dashboard-primary)',
+                'dashboard-primary': 'var(--dashboard-primary)',
+                'dashboard-primary-highlight': 'var(--dashboard-primary-highlight)',
+                'dashboard-primary-dim': 'var(--dashboard-primary-dim)',
+                'dashboard-border': 'var(--dashboard-border)',
+                'dashboard-highlight': 'var(--dashboard-highlight)',
+                'dashboard-highlight-overlay': 'var(--dashboard-highlight-overlay)',
+                'dashboard-dim': 'var(--dashboard-dim)',
             },
         },
     },
@@ -26,6 +32,37 @@ module.exports = {
             addVariant('peer-unchecked', '*:not(:checked)~&')
             addVariant('has-checked', '&:has(:checked)')
             addVariant('has-unchecked', '&:has(:not(:checked))')
+        }),
+        plugin(function({ addUtilities, addVariant, addComponents, e, config, theme }) {
+            for (const key of [
+                'dashboard-primary',
+                'dashboard-primary-highlight',
+                'dashboard-primary-dim',
+                'dashboard-border',
+                'dashboard-highlight',
+                'dashboard-highlight-overlay',
+                'dashboard-dim',
+            ]) {
+                addUtilities(Object.entries(theme('colors')).map(([color, value]) => {
+                    if (typeof value === 'string') {
+                        return {
+                            [`.set-${key}-${color}`]: {
+                                [`--${key}`]: value,
+                            },
+                        }
+                    }
+                    if (typeof value === 'object') {
+                        return Object.entries(value).reduce((obj, [shade, colorValue]) => {
+                            obj[`.set-${key}-${color}-${shade}`] = {
+                                [`--${key}`]: colorValue,
+                            }
+                            return obj
+                        }, {})
+                    }
+
+                    return {}
+                }))
+            }
         }),
     ],
 }
